@@ -1,0 +1,92 @@
+<template>
+    <div id="container" style="position: relative;width: 100%; height:100%;"></div>
+</template>
+    
+<script>
+    import MapLoader from '../../../assets/amap'
+
+    export default {
+        name: 'Amap',
+        data () {
+        return {
+            map: '',
+        }
+        },
+        mounted() {
+        this.initAMap()
+        },
+        methods: {
+            initAMap () {
+                let that = this
+                MapLoader().then(AMap => {
+                    that.map = new AMap.Map('container', {
+                        zoom: 26, // 级别
+                        center: [116.397428, 39.90923], // 中心点坐标
+                        viewMode:'3D' // 使用3D视图
+                    })
+                    var ridingOption = {
+                        map: that.map,
+                        panel: "panel",
+                        policy: 1,
+                        hideMarkers: false,
+                        isOutline: true,
+                        outlineColor: '#ffeeee',
+                        autoFitView: true
+                    }
+                    var riding = new AMap.Riding(ridingOption)
+                    riding.search([116.397933,39.844818],[116.440655,39.878694], function(status, result) {
+                        // result即是对应的公交路线数据信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_RidingResult
+                        if (status === 'complete') {
+                            log.success('骑行路线数据查询成功')
+                        } else {
+                            log.error('骑行路线数据查询失败' + result)
+                        }
+                    });
+                    // // 异步加载插件
+                    // // AMap.ToolBar: 滑动工具条， AMap.Scale: 比例尺
+                    // // 一次加载多个
+                    // AMap.plugin(['AMap.ToolBar', 'AMap.Scale'], function () {
+                    //     that.map.addControl(new AMap.ToolBar())
+                    //     that.map.addControl(new AMap.Scale())
+                    // })
+                    // // AMap.Geolocation: 定位
+                    // AMap.plugin('AMap.Geolocation', function () {
+                    //     let geolocation = new AMap.Geolocation({
+                    //         enableHighAccuracy: true, //是否使用高精度定位，默认:true
+                    //         timeout: 10000,           //超过10秒后停止定位，默认：无穷大
+                    //         maximumAge: 0,            //定位结果缓存0毫秒，默认：0
+                    //         convert: true,            //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                    //         showButton: true,         //显示定位按钮，默认：true
+                    //         buttonPosition: 'LB',     //定位按钮停靠位置，默认：'LB'，左下角
+                    //         buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                    //         showMarker: true,         //定位成功后在定位到的位置显示点标记，默认：true
+                    //         showCircle: true,         //定位成功后用圆圈表示定位精度范围，默认：true
+                    //         panToLocation: true,      //定位成功后将定位到的位置作为地图中心点，默认：true
+                    //         zoomToAccuracy:true       //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                    //     })
+                    //     that.map.addControl(geolocation)
+                        
+                    //     // 获取当前定位的信息
+                    //     geolocation.getCurrentPosition((status,result) => {
+                    //         console.log(result.addressComponent)
+                    //     })
+                    //     // AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+                    //     // AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+                    // })
+                })
+            }
+        }
+    }
+</script>
+    
+<style scoped>
+    /*隐藏高德地图logo，版本号*/
+    .amap-logo{
+    visibility: hidden;
+    }
+    .amap-copyright {
+    visibility: hidden;
+    }
+</style>
+    
+    

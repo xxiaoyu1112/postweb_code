@@ -24,10 +24,13 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
         })
         return resp
     },
-    GET_POSTMANID() {
+    GET_POSTMANID(prefix) {
       let resp = request({
         url: data_prefix + '/data/postmanId',
-        method: 'get',
+        method: 'post',
+        data: {
+          "prefix": prefix,
+        }
       })
       return resp
     },
@@ -53,6 +56,17 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
                 "page_num": pageNum
             }
         })
+        return resp
+    },
+    GET_POSTMAN_RAW_DATA(postmanId, postmanDate) {
+        let resp = request({
+            url: data_prefix + '/data/postmanRawData',
+            method: 'post',
+            data: {
+              "postman_id": postmanId,
+              "postman_workday": postmanDate,
+            }
+          })
         return resp
     },
     GEN_PREDICT_DEAL(tag) {

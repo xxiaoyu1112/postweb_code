@@ -1,0 +1,51 @@
+<template>
+    <div>
+      <el-card>
+        <div id="map-container" style="height: 500px;"></div>
+      </el-card>
+    </div>
+</template>
+  
+<script >
+import VueAMap from "vue-amap";
+Vue.use(VueAMap);
+
+VueAMap.initAMapApiLoader({
+  key: "YOUR_AMAP_API_KEY",
+  plugin: [
+    "AMap.Geolocation",
+    "AMap.Scale",
+    "AMap.OverView",
+    "AMap.ToolBar",
+    "AMap.MapType",
+    "AMap.PolyEditor",
+    "AMap.CircleEditor"
+  ],
+  uiVersion: "1.0.11", // 版本号
+  v: "1.4.15" // 高德地图API版本号
+});
+  export default {
+    name: "Map",
+    data() {
+      return {
+        map: null,
+        marker: null
+      };
+    },
+    mounted() {
+      this.initMap();
+    },
+    methods: {
+      initMap() {
+        this.map = new this.$amap.Map("map-container", {
+          zoom: 10,
+          center: [116.397428, 39.90923]
+        });
+        this.marker = new this.$amap.Marker({
+          position: [116.397428, 39.90923],
+          map: this.map
+        });
+      }
+    }
+  };
+  </script>
